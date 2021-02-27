@@ -26,57 +26,60 @@ struct Ticket {
   Date bus_departure_date;
 };
 
-class TicketProducerComsumer {
+class TicketTransactor {
  public:
-  TicketProducerComsumer(const std::string name) : name{name} {}
-  std::string get_name() const { return name; }
+  std::string get_name() const { return name_; }
 
  protected:
-  std::string name;
-  std::vector<std::shared_ptr<Ticket>> tickets;
+  explicit TicketTransactor(const std::string name) : name_{name} {}
+  void NewTransaction(const std::shared_ptr<Ticket> ticket) {
+    tickets_.push_back(std::move(ticket));
+  }
+  std::string name_;
+  std::vector<std::shared_ptr<Ticket>> tickets_;
 };
 
-class Person : public TicketProducerComsumer {
+class Person : public TicketTransactor {
  public:
-  Person(const std::string name) : TicketProducerComsumer{name} {}
-  void buy_ticket(const std::shared_ptr<Ticket> ticket) {
-    tickets.push_back(std::move(ticket));
+  explicit Person(const std::string name) : TicketTransactor{name} {}
+  void BuyTicket(const std::shared_ptr<Ticket> ticket) {
+    NewTransaction(std::move(ticket));
   }
-  void print_booked_buses() const {
-    if (tickets.empty()) {
-      std::cout << name << " does not book any ticket for bus.\n";
+  void PrintBookedBuses() const {
+    if (tickets_.empty()) {
+      std::cout << name_ << " does not book any ticket for bus.\n";
       return;
     }
-    std::cout << name << " has booked: ";
-    for (auto& t : tickets) {
+    std::cout << name_ << " has booked: ";
+    for (const auto& t : tickets_) {
       std::cout << "(" << t->bus_name << ", " << t->bus_departure_date << ") ";
     }
     std::cout << std::endl;
   }
 };
 
-class Bus : public TicketProducerComsumer {
+class Bus : public TicketTransactor {
  public:
-  Bus(const std::string name, const Date date)
-      : TicketProducerComsumer{name}, departure_date{date} {}
-  Date get_departure_date() { return departure_date; }
-  void sell_ticket(const std::shared_ptr<Ticket> ticket) {
-    tickets.push_back(std::move(ticket));
+  explicit Bus(const std::string name, const Date date)
+      : TicketTransactor{name}, departure_date_{date} {}
+  Date get_departure_date() { return departure_date_; }
+  void SellTicket(const std::shared_ptr<Ticket> ticket) {
+    NewTransaction(std::move(ticket));
   }
-  void print_passengers() const {
-    if (tickets.empty()) {
-      std::cout << name << " does not have any passenger.\n";
+  void PrintPassengers() const {
+    if (tickets_.empty()) {
+      std::cout << name_ << " does not have any passenger.\n";
       return;
     }
-    std::cout << "The passengers of " << name << ": ";
-    for (auto& t : tickets) {
+    std::cout << "The passengers of " << name_ << ": ";
+    for (const auto& t : tickets_) {
       std::cout << "(" << t->buyer_name << ", " << t->num_of_people << ") ";
     }
     std::cout << std::endl;
   }
 
  private:
-  Date departure_date;
+  Date departure_date_;
 };
 
 class TicketMachine {
@@ -87,12 +90,12 @@ class TicketMachine {
   }
   TicketMachine(const TicketMachine&) = delete;
   void operator=(const TicketMachine&) = delete;
-  void book(Person* buyer, Bus* bus, const int num_of_people) const {
+  void Book(Person* buyer, Bus* bus, const int num_of_people) const {
     auto ticket = make_aggregate_shared<Ticket>(buyer->get_name(),
                                                 num_of_people, bus->get_name(),
                                                 bus->get_departure_date());
-    bus->sell_ticket(ticket);
-    buyer->buy_ticket(ticket);
+    bus->SellTicket(ticket);
+    buyer->BuyTicket(ticket);
   }
 
  private:
@@ -115,18 +118,18 @@ int main() {
 
   /* Book tickets */
   auto& tmachine = TicketMachine::get_ticket_machine();
-  tmachine.book(alice.get(), bus100.get(), 4);
-  tmachine.book(alice.get(), bus102.get(), 2);
-  tmachine.book(bob.get(), bus100.get(), 6);
-  tmachine.book(carol.get(), bus101.get(), 3);
-  tmachine.book(dave.get(), bus100.get(), 5);
+  tmachine.Book(alice.get(), bus100.get(), 4);
+  tmachine.Book(alice.get(), bus102.get(), 2);
+  tmachine.Book(bob.get(), bus100.get(), 6);
+  tmachine.Book(carol.get(), bus101.get(), 3);
+  tmachine.Book(dave.get(), bus100.get(), 5);
 
   /* Validation */
-  bus100->print_passengers();
-  alice->print_booked_buses();
-  bus101->print_passengers();
-  bob->print_booked_buses();
-  bus103->print_passengers();
-  eve->print_booked_buses();
+  bus100->PrintPassengers();
+  alice->PrintBookedBuses();
+  bus101->PrintPassengers();
+  bob->PrintBookedBuses();
+  bus103->PrintPassengers();
+  eve->PrintBookedBuses();
   return 0;
 }
