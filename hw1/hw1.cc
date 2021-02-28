@@ -1,4 +1,4 @@
-// g++ --std=c++1z -O2 -Wall -o hw1 hw1.cpp
+// g++ --std=c++1z -O2 -Wall -o hw1 hw1.cc
 // ./hw1
 #include <iostream>
 #include <memory>
@@ -31,7 +31,7 @@ class TicketTransactor {
   std::string get_name() const { return name_; }
 
  protected:
-  explicit TicketTransactor(const std::string name) : name_{name} {}
+  explicit TicketTransactor(const std::string name) noexcept : name_{name} {}
   void NewTransaction(const std::shared_ptr<Ticket> ticket) {
     tickets_.push_back(std::move(ticket));
   }
@@ -41,7 +41,7 @@ class TicketTransactor {
 
 class Person : public TicketTransactor {
  public:
-  explicit Person(const std::string name) : TicketTransactor{name} {}
+  explicit Person(const std::string name) noexcept : TicketTransactor{name} {}
   void BuyTicket(const std::shared_ptr<Ticket> ticket) {
     NewTransaction(std::move(ticket));
   }
@@ -60,9 +60,9 @@ class Person : public TicketTransactor {
 
 class Bus : public TicketTransactor {
  public:
-  explicit Bus(const std::string name, const Date date)
+  explicit Bus(const std::string name, const Date date) noexcept
       : TicketTransactor{name}, departure_date_{date} {}
-  Date get_departure_date() { return departure_date_; }
+  Date get_departure_date() const { return departure_date_; }
   void SellTicket(const std::shared_ptr<Ticket> ticket) {
     NewTransaction(std::move(ticket));
   }
@@ -84,7 +84,7 @@ class Bus : public TicketTransactor {
 
 class TicketMachine {
  public:
-  static TicketMachine& get_ticket_machine() {
+  static TicketMachine& GetTicketMachine() noexcept {
     static TicketMachine instance;
     return instance;
   }
@@ -117,7 +117,7 @@ int main() {
   auto bus103 = std::make_unique<Bus>("Bus103", Date{2022, 2, 28});
 
   /* Book tickets */
-  auto& tmachine = TicketMachine::get_ticket_machine();
+  auto& tmachine = TicketMachine::GetTicketMachine();
   tmachine.Book(alice.get(), bus100.get(), 4);
   tmachine.Book(alice.get(), bus102.get(), 2);
   tmachine.Book(bob.get(), bus100.get(), 6);
