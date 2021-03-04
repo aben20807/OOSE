@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 struct Date {
   int year;
@@ -32,18 +32,28 @@ class TicketTransactor {
 
  protected:
   explicit TicketTransactor(const std::string name) noexcept : name_{name} {}
-  void NewTransaction(const std::shared_ptr<Ticket> ticket) {
-    tickets_.push_back(std::move(ticket));
+  void NewTransaction(const int ticket_index,
+                      const std::shared_ptr<Ticket> ticket) {
+    tickets_.insert(std::make_pair(ticket_index, std::move(ticket)));
+  }
+  void EraseTransaction(const int ticket_index) {
+    auto ticket = tickets_.find(ticket_index);
+    if (ticket != tickets_.end()) {
+      tickets_.erase(ticket);
+    } else {
+      std::cout << name_ << " did not book ticket with index: " << ticket_index
+                << ".\n";
+    }
   }
   std::string name_;
-  std::vector<std::shared_ptr<Ticket>> tickets_;
+  std::unordered_map<int, std::shared_ptr<Ticket>> tickets_;
 };
 
 class Person : public TicketTransactor {
  public:
   explicit Person(const std::string name) noexcept : TicketTransactor{name} {}
-  void BuyTicket(const std::shared_ptr<Ticket> ticket) {
-    NewTransaction(std::move(ticket));
+  void BuyTicket(const int ticket_index, const std::shared_ptr<Ticket> ticket) {
+    NewTransaction(ticket_index, std::move(ticket));
   }
   void PrintBookedBuses() const {
     if (tickets_.empty()) {
@@ -52,19 +62,21 @@ class Person : public TicketTransactor {
     }
     std::cout << name_ << " has booked: ";
     for (const auto& t : tickets_) {
-      std::cout << "(" << t->bus_name << ", " << t->bus_departure_date << ") ";
+      std::cout << "(" << t.second->bus_name << ", "
+                << t.second->bus_departure_date << ") ";
     }
-    std::cout << std::endl;
+    std::cout << "\n";
   }
 };
 
-class Bus : public TicketTransactor {
+class BusForBooking : public TicketTransactor {
  public:
-  explicit Bus(const std::string name, const Date date) noexcept
+  explicit BusForBooking(const std::string name, const Date date) noexcept
       : TicketTransactor{name}, departure_date_{date} {}
   Date get_departure_date() const { return departure_date_; }
-  void SellTicket(const std::shared_ptr<Ticket> ticket) {
-    NewTransaction(std::move(ticket));
+  void SellTicket(const int ticket_index,
+                  const std::shared_ptr<Ticket> ticket) {
+    NewTransaction(ticket_index, std::move(ticket));
   }
   void PrintPassengers() const {
     if (tickets_.empty()) {
@@ -73,9 +85,10 @@ class Bus : public TicketTransactor {
     }
     std::cout << "The passengers of " << name_ << ": ";
     for (const auto& t : tickets_) {
-      std::cout << "(" << t->buyer_name << ", " << t->num_of_people << ") ";
+      std::cout << "(" << t.second->buyer_name << ", "
+                << t.second->num_of_people << ") ";
     }
-    std::cout << std::endl;
+    std::cout << "\n";
   }
 
  private:
@@ -90,17 +103,20 @@ class TicketMachine {
   }
   TicketMachine(const TicketMachine&) = delete;
   void operator=(const TicketMachine&) = delete;
-  void Book(Person* buyer, Bus* bus, const int num_of_people) const {
+  void Book(Person* buyer, BusForBooking* bus, const int num_of_people) const {
     auto ticket = make_aggregate_shared<Ticket>(buyer->get_name(),
                                                 num_of_people, bus->get_name(),
                                                 bus->get_departure_date());
-    bus->SellTicket(ticket);
-    buyer->BuyTicket(ticket);
+    bus->SellTicket(ticket_index_, ticket);
+    buyer->BuyTicket(ticket_index_, ticket);
+    ticket_index_++;
   }
 
  private:
   TicketMachine() {}
+  static int ticket_index_;
 };
+int TicketMachine::ticket_index_ = 0;
 
 int main() {
   /* People */
@@ -111,10 +127,10 @@ int main() {
   auto eve = std::make_unique<Person>("Eve");
 
   /* Bus */
-  auto bus100 = std::make_unique<Bus>("Bus100", Date{2021, 2, 25});
-  auto bus101 = std::make_unique<Bus>("Bus101", Date{2021, 2, 26});
-  auto bus102 = std::make_unique<Bus>("Bus102", Date{2021, 2, 27});
-  auto bus103 = std::make_unique<Bus>("Bus103", Date{2022, 2, 28});
+  auto bus100 = std::make_unique<BusForBooking>("Bus100", Date{2021, 2, 25});
+  auto bus101 = std::make_unique<BusForBooking>("Bus101", Date{2021, 2, 26});
+  auto bus102 = std::make_unique<BusForBooking>("Bus102", Date{2021, 2, 27});
+  auto bus103 = std::make_unique<BusForBooking>("Bus103", Date{2022, 2, 28});
 
   /* Book tickets */
   auto& tmachine = TicketMachine::GetTicketMachine();
@@ -126,6 +142,7 @@ int main() {
 
   /* Validation */
   bus100->PrintPassengers();
+  alice->PrintBookedBuses();
   alice->PrintBookedBuses();
   bus101->PrintPassengers();
   bob->PrintBookedBuses();
