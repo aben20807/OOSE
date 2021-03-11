@@ -41,7 +41,7 @@ class TicketTransactor {
     if (ticket != tickets_.end()) {
       tickets_.erase(ticket);
     } else {
-      std::cout << name_ << " did not book ticket with index: " << ticket_index
+      std::cout << name_ << " did have the ticket with index: " << ticket_index
                 << ".\n";
     }
   }
@@ -60,12 +60,12 @@ class Person : public TicketTransactor {
       std::cout << name_ << " does not book any ticket for bus.\n";
       return;
     }
-    std::cout << name_ << " has booked: ";
+    std::cout << name_ << " has booked:";
     for (const auto& t : tickets_) {
-      std::cout << "(" << t.second->bus_name << ", "
-                << t.second->bus_departure_date << ") ";
+      std::cout << " (" << t.second->bus_name << ", "
+                << t.second->bus_departure_date << ")";
     }
-    std::cout << "\n";
+    std::cout << ".\n";
   }
 };
 
@@ -83,12 +83,12 @@ class BusForBooking : public TicketTransactor {
       std::cout << name_ << " does not have any passenger.\n";
       return;
     }
-    std::cout << "The passengers of " << name_ << ": ";
+    std::cout << "The passengers of " << name_ << ":";
     for (const auto& t : tickets_) {
-      std::cout << "(" << t.second->buyer_name << ", "
-                << t.second->num_of_people << ") ";
+      std::cout << " (" << t.second->buyer_name << ", "
+                << t.second->num_of_people << ")";
     }
-    std::cout << "\n";
+    std::cout << ".\n";
   }
 
  private:
@@ -103,7 +103,8 @@ class TicketMachine {
   }
   TicketMachine(const TicketMachine&) = delete;
   void operator=(const TicketMachine&) = delete;
-  void Book(Person* buyer, BusForBooking* bus, const int num_of_people) const {
+  void BookBusTickets(Person* buyer, BusForBooking* bus,
+                      const int num_of_people) const {
     auto ticket = make_aggregate_shared<Ticket>(buyer->get_name(),
                                                 num_of_people, bus->get_name(),
                                                 bus->get_departure_date());
@@ -119,30 +120,29 @@ class TicketMachine {
 int TicketMachine::ticket_index_ = 0;
 
 int main() {
-  /* People */
+  /* New people */
   auto alice = std::make_unique<Person>("Alice");
   auto bob = std::make_unique<Person>("Bob");
   auto carol = std::make_unique<Person>("Carol");
   auto dave = std::make_unique<Person>("Dave");
   auto eve = std::make_unique<Person>("Eve");
 
-  /* Bus */
+  /* New buses */
   auto bus100 = std::make_unique<BusForBooking>("Bus100", Date{2021, 2, 25});
   auto bus101 = std::make_unique<BusForBooking>("Bus101", Date{2021, 2, 26});
   auto bus102 = std::make_unique<BusForBooking>("Bus102", Date{2021, 2, 27});
   auto bus103 = std::make_unique<BusForBooking>("Bus103", Date{2022, 2, 28});
 
-  /* Book tickets */
+  /* Book bus tickets */
   auto& tmachine = TicketMachine::GetTicketMachine();
-  tmachine.Book(alice.get(), bus100.get(), 4);
-  tmachine.Book(alice.get(), bus102.get(), 2);
-  tmachine.Book(bob.get(), bus100.get(), 6);
-  tmachine.Book(carol.get(), bus101.get(), 3);
-  tmachine.Book(dave.get(), bus100.get(), 5);
+  tmachine.BookBusTickets(alice.get(), bus100.get(), 4);
+  tmachine.BookBusTickets(alice.get(), bus102.get(), 2);
+  tmachine.BookBusTickets(bob.get(), bus100.get(), 6);
+  tmachine.BookBusTickets(carol.get(), bus101.get(), 3);
+  tmachine.BookBusTickets(dave.get(), bus100.get(), 5);
 
   /* Validation */
   bus100->PrintPassengers();
-  alice->PrintBookedBuses();
   alice->PrintBookedBuses();
   bus101->PrintPassengers();
   bob->PrintBookedBuses();
