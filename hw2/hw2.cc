@@ -42,16 +42,10 @@ class BookingTransactor {
                 << ".\n";
     }
   }
-  template <typename F>
-  void PrintBookings(const F print_single_booking) const {
-    for ([[maybe_unused]] const auto& [_, booking_ptr] : bookings_) {
-      print_single_booking(booking_ptr);
-    }
-  }
+  virtual void PrintBookings() const = 0;
 
  protected:
   explicit BookingTransactor(const std::string name) noexcept : name_{name} {}
-  virtual ~BookingTransactor() {}
   std::string name_;
   std::unordered_map<int, std::shared_ptr<Booking>> bookings_;
 };
@@ -59,21 +53,18 @@ class BookingTransactor {
 class Person : public BookingTransactor {
  public:
   explicit Person(const std::string name) noexcept : BookingTransactor{name} {}
-  void PrintBookedBuses() const {
+  void PrintBookings() const override {
     if (bookings_.empty()) {
       std::cout << name_ << " does not book any booking for bus.\n";
       return;
     }
     std::cout << name_ << " has booked:";
-    PrintBookings(Person::print_single_booking);
+    for ([[maybe_unused]] const auto& [_, booking_ptr] : bookings_) {
+      std::cout << " (" << booking_ptr->bus_name << ", "
+                << booking_ptr->bus_departure_date << ")";
+    }
     std::cout << ".\n";
   }
-
- private:
-  constexpr static auto print_single_booking = [](const auto& booking_ptr) {
-    std::cout << " (" << booking_ptr->bus_name << ", "
-              << booking_ptr->bus_departure_date << ")";
-  };
 };
 
 class BusForBooking : public BookingTransactor {
@@ -81,34 +72,31 @@ class BusForBooking : public BookingTransactor {
   explicit BusForBooking(const std::string name, const Date date) noexcept
       : BookingTransactor{name}, departure_date_{date} {}
   Date get_departure_date() const { return departure_date_; }
-  void PrintPassengers() const {
+  void PrintBookings() const override {
     if (bookings_.empty()) {
       std::cout << name_ << " does not have any passenger.\n";
       return;
     }
     std::cout << "The passengers of " << name_ << ":";
-    PrintBookings(BusForBooking::print_single_booking);
+    for ([[maybe_unused]] const auto& [_, booking_ptr] : bookings_) {
+      std::cout << " (" << booking_ptr->buyer_name << ", "
+                << booking_ptr->num_of_people << ")";
+    }
     std::cout << ".\n";
   }
 
  private:
   Date departure_date_;
-  constexpr static auto print_single_booking = [](const auto& booking_ptr) {
-    std::cout << " (" << booking_ptr->buyer_name << ", "
-              << booking_ptr->num_of_people << ")";
-  };
 };
 
 class BookingMachine {
  public:
-  static BookingMachine& GetBookingMachine() noexcept {
+  static BookingMachine& GetBookingMachine() {
     static BookingMachine instance;
     return instance;
   }
-  BookingMachine(const BookingMachine&) = delete;
-  void operator=(const BookingMachine&) = delete;
   void MakeBooking(BookingTransactor* const buyer, BookingTransactor* const bus,
-                   const int num_of_people) const {
+                   const int num_of_people) {
     auto booking = make_aggregate_shared<Booking>(
         buyer->get_name(), bus->get_name(), num_of_people,
         dynamic_cast<BusForBooking*>(bus)->get_departure_date());
@@ -119,9 +107,8 @@ class BookingMachine {
 
  private:
   BookingMachine() {}
-  static int booking_index_;
+  inline static int booking_index_{0};
 };
-int BookingMachine::booking_index_ = 0;
 
 int main() {
   /* New people */
@@ -146,11 +133,11 @@ int main() {
   tmachine.MakeBooking(dave.get(), bus100.get(), 5);
 
   /* Validation */
-  bus100->PrintPassengers();
-  alice->PrintBookedBuses();
-  bus101->PrintPassengers();
-  bob->PrintBookedBuses();
-  bus103->PrintPassengers();
-  eve->PrintBookedBuses();
+  bus100->PrintBookings();
+  alice->PrintBookings();
+  bus101->PrintBookings();
+  bob->PrintBookings();
+  bus103->PrintBookings();
+  eve->PrintBookings();
   return 0;
 }
