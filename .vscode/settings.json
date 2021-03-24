@@ -1,0 +1,4 @@
+{
+    "clang-format.language.c.style": "=.clang-format",
+    "clangd.checkUpdates": true
+}
