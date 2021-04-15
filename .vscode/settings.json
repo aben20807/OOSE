@@ -1,4 +1,5 @@
 {
     "clang-format.language.c.style": "=.clang-format",
-    "clangd.checkUpdates": true
+    "clangd.checkUpdates": true,
+    "cmake.cmakePath": "D:\\program\\cmake\\cmake-3.20.1-windows-x86_64\\bin\\cmake.exe"
 }
