@@ -1,10 +1,9 @@
 #ifndef ABSTRACT_BOOKING
 #define ABSTRACT_BOOKING
 
-#include <string_view>
-
 class AbstractBooking {
  public:
+  static int adder(int, int);
 };
 
 #endif /* ABSTRACT_BOOKING */

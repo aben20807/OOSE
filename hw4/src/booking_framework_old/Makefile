@@ -1,19 +1,16 @@
 SRCDIR := .
 ROOTDIR = $(realpath .)
 BUILDDIR := $(ROOTDIR)/build
-BINDIR := $(ROOTDIR)/bin
-TARGET := $(BINDIR)/booking_bus
+TARGET := $(BUILDDIR)/libbooking_framework.a
 
 SRCEXT := cc
 SOURCES := $(shell find $(SRCDIR)/ -type f -name '*.$(SRCEXT)')
 OBJECTS := $(addprefix $(BUILDDIR)/,$(notdir $(SOURCES:.$(SRCEXT)=.o)))
-LIB := -static -L$(BUILDDIR) -lbooking_framework
 
 all: $(TARGET)
 	
 $(TARGET): $(OBJECTS)
-	@echo " Linking..."
-	@echo " $(CXX) $^ -o $(TARGET) $(LIB)"; $(CXX) $^ -o $(TARGET) $(LIB)
+	@echo " ar rcs $(TARGET) $(OBJECTS)"; ar rcs $(TARGET) $(OBJECTS)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT) $(SRCDIR)/%.h
 	@echo " $(CXX) $(CXXFLAGS) -c -o $@ $<"; $(CXX) $(CXXFLAGS) -c -o $@ $<

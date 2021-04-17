@@ -1,17 +1,16 @@
-SRCDIR := .
-ROOTDIR = $(realpath .)
-BUILDDIR := $(ROOTDIR)/build
-TARGET := $(BUILDDIR)/libbooking_framework.a
+# SRCDIR := .
+# ROOTDIR = $(realpath .)
+# BUILDDIR := $(ROOTDIR)/build
+# TARGET := $(BUILDDIR)/libbooking_framework.a
 
-SRCEXT := cc
-SOURCES := $(shell find $(SRCDIR)/ -type f -name '*.$(SRCEXT)')
-OBJECTS := $(addprefix $(BUILDDIR)/,$(notdir $(SOURCES:.$(SRCEXT)=.o)))
+# SRCEXT := cc
+# SOURCES := $(shell find $(SRCDIR)/ -type f -name '*.$(SRCEXT)')
+# OBJECTS := $(addprefix $(BUILDDIR)/,$(notdir $(SOURCES:.$(SRCEXT)=.o)))
 
-all: $(TARGET)
+# all: $(TARGET)
 	
-$(TARGET): $(OBJECTS)
-	@echo " ar rcs $(TARGET) $(OBJECTS)"; ar rcs $(TARGET) $(OBJECTS)
-	@$(RM) $(OBJECTS)
+# $(TARGET): $(OBJECTS)
+# 	@echo " ar rcs $(TARGET) $(OBJECTS)"; ar rcs $(TARGET) $(OBJECTS)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-	@echo " $(CXX) $(CXXFLAGS) -c -o $@ $<"; $(CXX) $(CXXFLAGS) -c -o $@ $<
+# $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT) $(SRCDIR)/%.h
+# 	@echo " $(CXX) $(CXXFLAGS) -c -o $@ $<"; $(CXX) $(CXXFLAGS) -c -o $@ $<
