@@ -9,7 +9,7 @@ class BusBookingTransactor : public AbstractBookingTransactor<BusBooking> {
  public:
   BusBookingTransactor(std::string name);
   std::string get_name();
-  virtual void PrintBookings() const {};
+  virtual void PrintBookings() const = 0;
 
  protected:
   std::string name_;

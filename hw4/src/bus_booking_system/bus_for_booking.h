@@ -10,7 +10,7 @@ class BusForBooking : public BusBookingTransactor {
   BusForBooking(std::string name, Date departure_date);
   void AddBooking(int, std::shared_ptr<BusBooking>);
   Date get_departure_date() const;
-  void PrintBookings() const override;
+  void PrintBookings() const final;
 
  private:
   /* Hooks */

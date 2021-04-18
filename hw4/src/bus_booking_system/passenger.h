@@ -9,7 +9,7 @@ class Passenger : public BusBookingTransactor {
  public:
   Passenger(std::string name);
   void AddBooking(int, std::shared_ptr<BusBooking>);
-  void PrintBookings() const override;
+  void PrintBookings() const final;
 
  private:
   /* Hooks */
