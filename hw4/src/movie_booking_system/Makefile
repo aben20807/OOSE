@@ -7,14 +7,12 @@ TARGET := $(BINDIR)/booking_movie
 SRCEXT := cc
 SOURCES := $(shell find $(SRCDIR)/ -type f -name '*.$(SRCEXT)')
 OBJECTS := $(addprefix $(BUILDDIR)/,$(notdir $(SOURCES:.$(SRCEXT)=.o)))
-FRAMEWORKLIB := $(BUILDDIR)/libbooking_framework.a
-LIB := -static -L$(BUILDDIR) -lbooking_framework
 
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS) $(FRAMEWORKLIB)
+$(TARGET): $(OBJECTS)
 	@echo " Linking..."
-	@echo " $(CXX) $^ -o $(TARGET) $(LIB)"; $(CXX) $^ -o $(TARGET) $(LIB)
+	@echo " $(CXX) $^ -o $(TARGET)"; $(CXX) $^ -o $(TARGET)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo " $(CXX) $(CXXFLAGS) -c -o $@ $<"; $(CXX) $(CXXFLAGS) -c -o $@ $<

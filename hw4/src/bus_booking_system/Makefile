@@ -7,8 +7,6 @@ TARGET := $(BINDIR)/booking_bus
 SRCEXT := cc
 SOURCES := $(shell find $(SRCDIR)/ -type f -name '*.$(SRCEXT)')
 OBJECTS := $(addprefix $(BUILDDIR)/,$(notdir $(SOURCES:.$(SRCEXT)=.o)))
-# FRAMEWORKLIB := $(BUILDDIR)/libbooking_framework.a
-# LIB := -static -L$(BUILDDIR) -lbooking_framework
 
 all: $(TARGET)
 	

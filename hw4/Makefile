@@ -28,4 +28,4 @@ format:
 
 clean:
 	@echo " Cleaning...";
-	@echo " $(RM) -rf $(BUILDDIR)"; $(RM) -rf $(BUILDDIR)
+	@echo " $(RM) -rf $(BUILDDIR) $(BINDIR)/*"; $(RM) -rf $(BUILDDIR) $(BINDIR)/*
