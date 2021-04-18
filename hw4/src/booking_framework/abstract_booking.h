@@ -1,10 +1,6 @@
 #ifndef ABSTRACT_BOOKING
 #define ABSTRACT_BOOKING
 
-#include <string_view>
-
-class AbstractBooking {
- public:
-};
+class AbstractBooking {};
 
 #endif /* ABSTRACT_BOOKING */

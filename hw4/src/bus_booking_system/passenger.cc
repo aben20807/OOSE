@@ -1,15 +1,13 @@
 #include "passenger.h"
 
-Passenger::Passenger(std::string name)
-    : BusBookingTransactor{name, std::make_unique<BusBookingBuyingBehavior>()} {
-}
+Passenger::Passenger(std::string name) : BusBookingTransactor{name} {}
 
 void Passenger::AddBooking(int index, std::shared_ptr<BusBooking> booking) {
-  booking_helper_->AddBookingTransaction(index, std::move(booking));
+  this->AddBookingTransaction(index, std::move(booking));
 }
 
 void Passenger::PrintBookings() const {
-  auto& bookings_ = booking_helper_->get_held_bookings();
+  const auto& bookings_ = this->get_held_bookings();
   if (bookings_.empty()) {
     std::cout << name_ << " does not book any booking for bus.\n";
     return;
@@ -20,4 +18,8 @@ void Passenger::PrintBookings() const {
               << booking_ptr->get_bus_departure_date() << ")";
   }
   std::cout << ".\n";
+}
+
+void Passenger::BookingAdded(std::shared_ptr<BusBooking> b) {
+  std::cout << "[Passenger     INFO] booking added!: (" << *(b.get()) << ")\n";
 }

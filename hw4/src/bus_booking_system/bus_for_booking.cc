@@ -1,11 +1,10 @@
 #include "bus_for_booking.h"
 
 BusForBooking::BusForBooking(std::string name, Date departure_date)
-    : BusBookingTransactor{name, std::make_unique<BusBookingSellingBehavior>()},
-      departure_date_{departure_date} {}
+    : BusBookingTransactor{name}, departure_date_{departure_date} {}
 
 void BusForBooking::AddBooking(int index, std::shared_ptr<BusBooking> booking) {
-  booking_helper_->AddBookingTransaction(index, std::move(booking));
+  this->AddBookingTransaction(index, std::move(booking));
 }
 
 Date BusForBooking::get_departure_date() const { return departure_date_; }
@@ -14,7 +13,7 @@ Date BusForBooking::get_departure_date() const { return departure_date_; }
  * @brief Overridden function to print passenger info from bus's booking list.
  */
 void BusForBooking::PrintBookings() const {
-  auto& bookings_ = booking_helper_->get_held_bookings();
+  const auto& bookings_ = this->get_held_bookings();
   if (bookings_.empty()) {
     std::cout << name_ << " does not have any passenger.\n";
     return;
@@ -25,4 +24,8 @@ void BusForBooking::PrintBookings() const {
               << booking_ptr->get_num_of_people() << ")";
   }
   std::cout << ".\n";
+}
+
+void BusForBooking::BookingAdded(std::shared_ptr<BusBooking> b) {
+  std::cout << "[BusForBooking INFO] booking added!: (" << *(b.get()) << ")\n";
 }

@@ -2,12 +2,7 @@
 #define BUS_FOR_BOOKING_H
 
 #include <string>
-// #include "../booking_framework/booking_selling_behavior.h"
 #include "bus_booking.h"
-#include "bus_booking_selling_behavior.h"
-// template class BookingSellingBehavior<BusBooking>;
-// #include "booking_behavior_impl.cc"
-
 #include "bus_booking_transactor.h"
 
 class BusForBooking : public BusBookingTransactor {
@@ -18,6 +13,8 @@ class BusForBooking : public BusBookingTransactor {
   void PrintBookings() const override;
 
  private:
+  /* Hooks */
+  void BookingAdded(std::shared_ptr<BusBooking> b) final;
   Date departure_date_;
 };
 

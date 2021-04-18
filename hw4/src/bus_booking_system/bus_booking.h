@@ -21,4 +21,6 @@ class BusBooking : public AbstractBooking {
   Date bus_departure_date_{1997, 1, 1};
 };
 
+std::ostream &operator<<(std::ostream &out, const BusBooking bus_booking);
+
 #endif /* BUS_BOOKING_H */

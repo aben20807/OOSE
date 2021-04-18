@@ -1,15 +1,8 @@
-#include "main.h"
+#include <iostream>
+#include <memory>
+#include "bus_booking_machine.h"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[]) {
-  // auto person = std::make_unique<Passenger>("ppxxx");
-  // std::cout << person->get_name();
-
-  // auto bus = std::make_unique<BusForBooking>("busxxx");
-  // std::cout << bus->get_name();
-
-  // auto booking = std::make_unique<BusBooking>("busxxx", "c", 7, Date{3, 3,
-  // 3}); std::cout << booking->get_info(); return 0;
-
   /* New people */
   auto alice = std::make_unique<Passenger>("Alice");
   auto bob = std::make_unique<Passenger>("Bob");

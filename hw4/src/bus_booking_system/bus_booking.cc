@@ -11,3 +11,11 @@ std::string BusBooking::get_buyer_name() const { return buyer_name_; }
 std::string BusBooking::get_bus_name() const { return bus_name_; }
 int BusBooking::get_num_of_people() const { return num_of_people_; }
 Date BusBooking::get_bus_departure_date() const { return bus_departure_date_; }
+
+std::ostream &operator<<(std::ostream &out, const BusBooking bus_booking) {
+  out << "Passenger: " << bus_booking.get_buyer_name()
+      << ", Bus: " << bus_booking.get_bus_name()
+      << ", Num of people: " << bus_booking.get_num_of_people()
+      << ", Date: " << bus_booking.get_bus_departure_date();
+  return out;
+}
