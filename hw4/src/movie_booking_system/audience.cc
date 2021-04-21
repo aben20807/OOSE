@@ -21,5 +21,5 @@ void Audience::PrintBookings() const {
 }
 
 void Audience::BookingAdded(std::shared_ptr<MovieBooking> b) {
-  std::cout << "[Audience     INFO] booking added!: (" << *(b.get()) << ")\n";
+  std::cout << "[Audience     INFO] booking added!:\n(" << *(b.get()) << ")\n";
 }

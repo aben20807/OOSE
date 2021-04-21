@@ -10,10 +10,15 @@ class BusForBooking : public BusBookingTransactor {
   BusForBooking(std::string name, Date departure_date);
   void AddBooking(int, std::shared_ptr<BusBooking>);
   Date get_departure_date() const;
+
+  /**
+   * @brief Overridden function to print passenger info from movie's booking
+   * list.
+   */
   void PrintBookings() const final;
 
  private:
-  /* Hooks */
+  /* Custom Hooks */
   void BookingAdded(std::shared_ptr<BusBooking> b) final;
   Date departure_date_;
 };

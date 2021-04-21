@@ -9,9 +9,6 @@ void BusForBooking::AddBooking(int index, std::shared_ptr<BusBooking> booking) {
 
 Date BusForBooking::get_departure_date() const { return departure_date_; }
 
-/**
- * @brief Overridden function to print passenger info from bus's booking list.
- */
 void BusForBooking::PrintBookings() const {
   const auto& bookings_ = this->get_held_bookings();
   if (bookings_.empty()) {
@@ -27,5 +24,5 @@ void BusForBooking::PrintBookings() const {
 }
 
 void BusForBooking::BookingAdded(std::shared_ptr<BusBooking> b) {
-  std::cout << "[BusForBooking INFO] booking added!: (" << *(b.get()) << ")\n";
+  std::cout << "[BusForBooking INFO] booking added!:\n(" << *(b.get()) << ")\n";
 }

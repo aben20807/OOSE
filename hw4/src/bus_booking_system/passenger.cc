@@ -21,5 +21,5 @@ void Passenger::PrintBookings() const {
 }
 
 void Passenger::BookingAdded(std::shared_ptr<BusBooking> b) {
-  std::cout << "[Passenger     INFO] booking added!: (" << *(b.get()) << ")\n";
+  std::cout << "[Passenger     INFO] booking added!:\n(" << *(b.get()) << ")\n";
 }

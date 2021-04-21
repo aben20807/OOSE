@@ -9,10 +9,15 @@ class Passenger : public BusBookingTransactor {
  public:
   Passenger(std::string name);
   void AddBooking(int, std::shared_ptr<BusBooking>);
+
+  /**
+   * @brief Overridden function to print passenger info from movie's booking
+   * list.
+   */
   void PrintBookings() const final;
 
  private:
-  /* Hooks */
+  /* Custom Hooks */
   void BookingAdded(std::shared_ptr<BusBooking> b) final;
 };
 
