@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+
 #include "common.h"
 #include "employee.h"
 #include "manager.h"
@@ -11,9 +12,9 @@ class Manager;
 
 class AdministrativeAssistant : public Employee {
  public:
-  AdministrativeAssistant(std::string name, int id, Gender gender,
+  AdministrativeAssistant(std::string name, Gender gender, int id,
                           Manager* supervisor)
-      : Employee(name, id, gender, Position::AdministrativeAssistant),
+      : Employee{name, gender, id, Position::AdministrativeAssistant},
         supervisors_{supervisor} {
     supervisor->AddSubordinate(this);
   }
@@ -21,10 +22,10 @@ class AdministrativeAssistant : public Employee {
     supervisors_.emplace_back(supervisor);
     supervisor->AddSubordinate(this);
   }
-  std::vector<Manager*> get_supervisors() const { return supervisors_; }
+  std::vector<const Manager*> get_supervisors() const { return supervisors_; }
 
  private:
-  std::vector<Manager*> supervisors_;
+  std::vector<const Manager*> supervisors_;
 };
 
 #endif /* ADMINISTRATIVE_ASSISTANT_H */

@@ -3,8 +3,12 @@
 
 #include <string>
 #include <vector>
+
+#include "board_of_directors.h"
 #include "common.h"
 #include "employee.h"
+
+class BoardOfDirectors;
 
 class Company {
  public:
@@ -19,6 +23,13 @@ class Company {
     e->set_workfor(this);
   }
   std::size_t get_num_of_employees() const { return employees_.size(); }
+  void set_board_of_directors(BoardOfDirectors *b) {
+    b->set_company(this);
+    board_of_directors_ = b;
+  }
+  const BoardOfDirectors *get_board_of_directors() {
+    return board_of_directors_;
+  }
 
   std::vector<const Employee *> Filter(std::string name) {
     std::vector<const Employee *> ret;
@@ -52,6 +63,7 @@ class Company {
   std::string name_;
   std::string unified_business_number_;
   std::vector<const Employee *> employees_{};
+  const BoardOfDirectors *board_of_directors_{nullptr};
 };
 
 #endif /* COMPANY_H */

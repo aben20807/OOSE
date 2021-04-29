@@ -11,17 +11,10 @@ enum class Position {
   AdministrativeAssistant,
 };
 
-enum class Gender {
-  M,
-  F,
+enum class Gender : unsigned char {
+  M,  // male
+  F,  // female
   O,  // other
-};
-
-enum class Field {
-  Name,
-  Id,
-  Gender,
-  Position,
 };
 
 #endif /* COMMON_H */

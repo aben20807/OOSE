@@ -1,22 +1,23 @@
 #include <iostream>
 #include <vector>
+
 #include "administrative_assistant.h"
 #include "common.h"
 #include "manager.h"
 
 int main() {
-  Employee* alice = new Manager("Alice", 0, Gender::F);
-  Employee* bob = new Manager("Bob", 0, Gender::M);
-  Employee* carol = new Manager("Carol", 0, Gender::M);
-  Employee* dave = new Manager("Dave", 0, Gender::M);
+  Employee* alice = new Manager("Alice", Gender::F, 0);
+  Employee* bob = new Manager("Bob", Gender::M, 0);
+  Employee* carol = new Manager("Carol", Gender::M, 0);
+  Employee* dave = new Manager("Dave", Gender::M, 0);
 
   /* Each administrative assistant should have at least one manager as
    * the supervisor */
-  Employee* eve = new AdministrativeAssistant("Eve", 0, Gender::F,
+  Employee* eve = new AdministrativeAssistant("Eve", Gender::F, 0,
                                               dynamic_cast<Manager*>(alice));
-  Employee* isaac = new AdministrativeAssistant("Isaac", 0, Gender::M,
+  Employee* isaac = new AdministrativeAssistant("Isaac", Gender::M, 0,
                                                 dynamic_cast<Manager*>(carol));
-  Employee* justin = new AdministrativeAssistant("Justin", 0, Gender::M,
+  Employee* justin = new AdministrativeAssistant("Justin", Gender::M, 0,
                                                  dynamic_cast<Manager*>(alice));
 
   /* Assign more manager as the supervisor */

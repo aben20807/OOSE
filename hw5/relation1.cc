@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+
 #include "common.h"
 #include "company.h"
 #include "employee.h"
@@ -9,11 +10,11 @@ int main() {
   auto apple = new Company("Apple", "0123456789");
 
   /* New employees */
-  auto alice = new Employee("Alice", 0, Gender::F, Position::Chairman);
-  auto bob = new Employee("Bob", 1, Gender::M, Position::SeniorEngineer);
-  auto carol = new Employee("Carol", 2, Gender::M, Position::ProductManager);
-  auto dave = new Employee("Dave", 3, Gender::M, Position::JuniorEngineer);
-  auto eve = new Employee("Eve", 4, Gender::F, Position::JuniorEngineer);
+  auto alice = new Employee("Alice", Gender::F, 0, Position::Chairman);
+  auto bob = new Employee("Bob", Gender::M, 1, Position::SeniorEngineer);
+  auto carol = new Employee("Carol", Gender::M, 2, Position::ProductManager);
+  auto dave = new Employee("Dave", Gender::M, 3, Position::JuniorEngineer);
+  auto eve = new Employee("Eve", Gender::F, 4, Position::JuniorEngineer);
 
   /* Add relation */
   apple->AddEmployee(alice);
