@@ -2,7 +2,7 @@
 #define BOARD_OF_DIRECTORS_H
 
 #include <iostream>
-
+#include <vector>
 #include "common.h"
 #include "person.h"
 
