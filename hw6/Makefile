@@ -5,7 +5,7 @@ DBGFLAGS := -g3 -ggdb -O0
 
 SRCDIR := .
 ROOTDIR = $(realpath .)
-# BUILDDIR := $(ROOTDIR)/build
+BUILDDIR := $(ROOTDIR)/build
 BINDIR := $(ROOTDIR)/bin
 TARGETS := main
 
@@ -17,7 +17,7 @@ mk_dirs:
 $(TARGETS): %: mk_dirs $(BINDIR)/%;
 
 $(BINDIR)/%: %.cc
-	$(CXX) $(CXXFLAGS) -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $< common.cc
 
 format:
 	$(eval FILES := $(shell find $(SRCDIR)/ -type f -name '*.cc' -or -name '*.h'))

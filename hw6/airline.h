@@ -4,20 +4,18 @@
 #include <string>
 #include <vector>
 
-#include "person.h"
-#include "regular_flight.h"
+class Person;
+class RegularFlight;
 
 class Airline {
  public:
   Airline(std::string name) : name{name} {}
-  void addPerson(Person* person) {
-    people.emplace_back(person);
-    person->linkAirline(this);
-  }
+  void addPerson(Person* person) { people.emplace_back(person); }
   void addRegularFlight(RegularFlight* reg_flight) {
     flights.emplace_back(reg_flight);
-    reg_flight->linkAirline(this);
   }
+  std::vector<RegularFlight*>& getRegularFlights() { return flights; }
+  std::vector<Person*>& getPeople() { return people; }
 
  private:
   std::string name;

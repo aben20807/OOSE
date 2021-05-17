@@ -5,18 +5,23 @@
 
 #include "booking.h"
 #include "common.h"
+#include "regular_flight.h"
 
-class RegularFlight;
 class EmployeeRole;
 
 class SpecificFlight {
  public:
+  SpecificFlight(Date date, RegularFlight* regular_flight) : date{date} {
+    linkRegularFlight(regular_flight);
+  }
+  Date getDate() const { return date; }
   void addBooking(Booking* booking) {
     bookings.emplace_back(booking);
     booking->linkSpecificFlight(this);
   }
   void linkRegularFlight(RegularFlight* regular_flight) {
     this->regular_flight = regular_flight;
+    regular_flight->addSpecificFlight(this);
   }
   void addEmployeeRole(EmployeeRole* emp) { this->employees.push_back(emp); }
 

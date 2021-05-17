@@ -3,24 +3,29 @@
 
 #include <vector>
 
+#include "airline.h"
 #include "common.h"
-#include "specific_flight.h"
 
-class Airline;
+class SpecificFlight;
 
 class RegularFlight {
  public:
-  RegularFlight(Time time, int flightNumber)
-      : time{time}, flightNumber{flightNumber} {}
   RegularFlight(Time time, int flightNumber, Airline* airline)
-      : RegularFlight(time, flightNumber) {
+      : time{time}, flightNumber{flightNumber} {
     linkAirline(airline);
   }
+  std::vector<SpecificFlight*>& getSpecificFlights() {
+    return specific_flights;
+  }
+  Time getTime() const { return time; }
+  int getFlightNumber() const { return flightNumber; }
   void addSpecificFlight(SpecificFlight* specific_flight) {
     specific_flights.emplace_back(specific_flight);
-    specific_flight->linkRegularFlight(this);
   }
-  void linkAirline(Airline* airline) { this->airline = airline; }
+  void linkAirline(Airline* airline) {
+    this->airline = airline;
+    airline->addRegularFlight(this);
+  }
 
  private:
   Time time;
