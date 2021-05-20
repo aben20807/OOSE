@@ -13,6 +13,8 @@ class Booking {
   void linkSpecificFlight(SpecificFlight* specific_flight) {
     this->specific_flight = specific_flight;
   }
+  SpecificFlight* getSpecificFlight() const { return specific_flight; }
+  int getSeatNumber() const { return seatNumber; }
 
  private:
   int seatNumber;

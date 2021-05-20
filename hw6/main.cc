@@ -23,17 +23,16 @@ int main() {
       new Person("Bob", "0124", happy_air, {new EmployeeRole("crew")});
   Person* carol =
       new Person("Carol", "0125", happy_air,
-                 {new EmployeeRole("crew", bob->get_employee_role(0))});
-  Person* dave =
-      new Person("Dave", "0126", happy_air,
-                 {new EmployeeRole("crew", bob->get_employee_role(0)),
-                  new PassengerRole()});
+                 {new EmployeeRole("crew", bob->get_employee_role())});
+  Person* dave = new Person("Dave", "0126", happy_air,
+                            {new EmployeeRole("crew", bob->get_employee_role()),
+                             new PassengerRole()});
 
   Person* eve = new Person("Eve", "0127", {new PassengerRole()});
   Person* isaac = new Person("Isaac", "0128", {new PassengerRole()});
   Person* justin = new Person("Justin", "0129", {new PassengerRole()});
 
-  std::cout << "Date for flight1:\n";
+  std::cout << "\nDate for flight1:\n";
   for (const auto& f : flight1->getSpecificFlights()) {
     std::cout << f->getDate() << "\n";
   }
@@ -50,9 +49,22 @@ int main() {
     std::cout << p->getName() << "\n";
   }
   std::cout << "\nThe employees whose supervisor is Bob:\n";
-  for (const auto& s : bob->get_employee_role(0)->getSubordinates()) {
-    std::cout << s->get_person()->getName() << "\n";
+  for (const auto& s : bob->get_employee_role()->getSubordinates()) {
+    std::cout << s->getPerson()->getName() << "\n";
   }
+
+  /* Test booking and canceling */
+  Booking* b1 = dave->get_passenger_role()->bookSpecificFlight(flight1_0516, 1);
+  dave->get_passenger_role()->bookSpecificFlight(flight1_0517, 3);
+  std::cout << "\n" << dave->getName() << " has booked: \n";
+  dave->get_passenger_role()->printBookings();
+  dave->get_passenger_role()->cancelBooking(b1);
+  std::cout << "\n" << dave->getName() << " has booked: \n";
+  dave->get_passenger_role()->printBookings();
+
+  eve->get_passenger_role()->bookSpecificFlight(flight1_0516, 2);
+  isaac->get_passenger_role()->bookSpecificFlight(flight1_0517, 2);
+  justin->get_passenger_role()->bookSpecificFlight(flight2_0516, 1);
 
   for (auto& p : {alice, bob, carol, dave, eve, isaac, justin}) delete p;
   for (auto& p : {flight1_0516, flight1_0517, flight1_0518, flight2_0516})

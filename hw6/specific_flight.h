@@ -15,6 +15,7 @@ class SpecificFlight {
     linkRegularFlight(regular_flight);
   }
   Date getDate() const { return date; }
+  RegularFlight* getRegularFlight() const { return regular_flight; }
   void addBooking(Booking* booking) {
     bookings.emplace_back(booking);
     booking->linkSpecificFlight(this);
@@ -24,6 +25,14 @@ class SpecificFlight {
     regular_flight->addSpecificFlight(this);
   }
   void addEmployeeRole(EmployeeRole* emp) { this->employees.push_back(emp); }
+  void cancelBooking(Booking* booking) {
+    for (auto it = bookings.begin(); it != bookings.end(); ++it) {
+      if (*it == booking) {
+        bookings.erase(it);
+        break;
+      }
+    }
+  }
 
  private:
   Date date;

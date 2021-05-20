@@ -6,10 +6,10 @@ class Person;
 class PersonRole {
  public:
   void linkPerson(Person* person) { this->person = person; }
-  Person* get_person() const { return person; }
+  Person* getPerson() const { return person; }
   virtual ~PersonRole() = default;
 
- private:
+ protected:
   Person* person{nullptr};
 };
 
